@@ -5,51 +5,58 @@
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)
 ![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Coming%20Soon-yellow?style=for-the-badge)
 
 **Advanced DOM-based XSS Detection with AI-Powered Payload Engine**
+
+*🚧 Currently Under Development - Launching Soon! 🚧*
 
 </div>
 
 ## 📖 Table of Contents
 
-- [🌟 Features](#-features)
+- [🌟 Coming Soon Features](#-coming-soon-features)
+- [🎯 Overview](#-overview)
 - [🚀 Quick Start](#-quick-start)
 - [🛠️ Installation](#️-installation)
 - [💻 Usage](#-usage)
-- [🎯 Scan Types](#-scan-types)
+- [🔧 Advanced Features](#-advanced-features)
 - [📊 Output Examples](#-output-examples)
-- [🔧 Advanced Configuration](#-advanced-configuration)
 - [🛡️ Security Features](#️-security-features)
 - [📁 Project Structure](#-project-structure)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 - [⚠️ Disclaimer](#️-disclaimer)
 
-## 🌟 Features
+## 🌟 Coming Soon Features
 
-### 🔍 **Advanced Detection**
-- **DOM XSS Scanning** - Comprehensive DOM environment analysis
-- **Reflection Analysis** - Smart payload reflection detection
-- **Context-Aware Testing** - HTML, JavaScript, Attribute, URL contexts
-- **Polyglot Payloads** - Multi-context payloads for maximum coverage
+### 🚀 **v1.1 Release**
+- **Machine Learning Engine** - AI-powered vulnerability prediction
+- **Advanced Fuzzing** - Smart payload generation and mutation
+- **API Security Testing** - REST API and GraphQL XSS detection
+- **WebSocket Testing** - Real-time communication vulnerability assessment
 
-### 🧠 **AI-Powered Engine**
-- **Adaptive Payloads** - Machine learning-based payload optimization
-- **Context Learning** - Learns from successful injection contexts
-- **Smart Encoding** - Automatic payload encoding variations
-- **Confidence Scoring** - Intelligent vulnerability confidence assessment
+### 🔮 **v1.2 Release**
+- **Cloud Integration** - AWS, Azure, GCP cloud service testing
+- **CI/CD Pipeline** - Automated security testing in DevOps
+- **Container Security** - Docker and Kubernetes environment scanning
+- **Mobile App Testing** - Hybrid and mobile web application support
 
-### ⚡ **Performance**
-- **High Concurrency** - Async scanning with configurable threads
-- **Fast Analysis** - Optimized DOM parsing and analysis
-- **Progress Tracking** - Real-time progress with detailed statistics
-- **Memory Efficient** - Optimized resource usage
+### 🎯 **Future Roadmap**
+- **Zero-Day Detection** - Unknown XSS vector identification
+- **Behavioral Analysis** - User interaction simulation
+- **Compliance Reporting** - PCI DSS, OWASP, NIST compliance reports
+- **Enterprise Dashboard** - Multi-project management and analytics
 
-### 📊 **Professional Reporting**
-- **HTML Reports** - Interactive, professional-grade reports
-- **JSON Export** - Machine-readable results for automation
-- **Text Summaries** - Clean terminal output with color coding
-- **Vulnerability Classification** - Critical, High, Medium, Low risk levels
+## 🎯 Overview
+
+**STEVENXSS v1.0** is an advanced, enterprise-grade DOM XSS scanner designed for modern web applications. Built with cutting-edge detection techniques and an adaptive payload engine, it provides comprehensive security assessment capabilities for security professionals, penetration testers, and development teams.
+
+### 🔍 **Core Capabilities**
+- **DOM XSS Scanning** - Comprehensive client-side vulnerability detection
+- **Reflection Analysis** - Smart payload reflection and execution analysis
+- **Context-Aware Testing** - Multi-context injection point identification
+- **Adaptive Payloads** - Machine learning-driven payload optimization
 
 ## 🚀 Quick Start
 
@@ -60,11 +67,11 @@
 
 ### One-Command Installation
 ```bash
-# Download and install
-curl -sSL https://raw.githubusercontent.com/your-repo/stevenxss/main/install.sh | bash
+# Download and install (Available Soon)
+curl -sSL https://raw.githubusercontent.com/steven-security/stevenxss/main/install.sh | bash
 
 # Or clone and install
-git clone https://github.com/your-repo/stevenxss.git
+git clone https://github.com/steven-security/stevenxss.git](https://github.com/ssttrrss/stevenxss.git
 cd stevenxss
 chmod +x install.sh
 ./install.sh
