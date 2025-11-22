@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-STEVENXSS v2.4 - Ultimate DOM XSS Scanner
+STEVENXSS v1.0 - Ultimate DOM XSS Scanner
 Developer: STEVEN
 Enhanced with Advanced Payload Engine & Exploit Verification
 Now with full DOM XSS, Blind XSS, WAF Bypass, and CSP Bypass support
@@ -66,7 +66,7 @@ class DisplayManager:
 ║    ███████║   ██║   ███████╗ ╚████╔╝ ███████╗██║ ╚████║██╔╝ ██╗║
 ║    ╚══════╝   ╚═╝   ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝║
 ║                                                                ║
-║    {TerminalColors.YELLOW}🚀 STEVENXSS v2.4 - ULTIMATE EDITION{TerminalColors.CYAN}              ║
+║    {TerminalColors.YELLOW}🚀 STEVENXSS v1.0 - ULTIMATE EDITION{TerminalColors.CYAN}              ║
 ║    {TerminalColors.WHITE}Advanced DOM XSS Scanner with Exploit Verification{TerminalColors.CYAN}    ║
 ║    Developer: STEVEN | Kali Linux Optimized{TerminalColors.CYAN}                 ║
 ║    {TerminalColors.GREEN}✅ Full DOM XSS, Blind XSS, WAF & CSP Bypass Support{TerminalColors.CYAN}   ║
@@ -2420,3 +2420,4 @@ if __name__ == "__main__":
                 DisplayManager.print_info("Kali Linux detected - Optimized configuration enabled")
     
     asyncio.run(main())
+
