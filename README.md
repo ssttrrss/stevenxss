@@ -75,3 +75,7 @@ git clone https://github.com/steven-security/stevenxss.git](https://github.com/s
 cd stevenxss
 chmod +x install.sh
 ./install.sh
+
+
+
+For use : python3 stevenxss.py -u "https://example.com/p=?" -f payloads.txt -s comprehensive -t 50 --max-tests 1000
